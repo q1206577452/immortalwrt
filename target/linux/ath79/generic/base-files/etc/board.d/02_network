@@ -33,6 +33,7 @@ ath79_setup_interfaces()
 	dlink,dap-3320-a1|\
 	dlink,dir-505|\
 	engenius,eap1200h|\
+	engenius,eap300-v2|\
 	engenius,eap600|\
 	engenius,ecb1200|\
 	engenius,ecb1750|\
@@ -107,10 +108,7 @@ ath79_setup_interfaces()
 	alfa-network,n5q|\
 	devolo,dvl1200e|\
 	devolo,dvl1750e|\
-	engenius,enstationac-v1|\
-	engenius,ews511ap|\
-	ocedo,ursus|\
-	ubnt,unifi-ap-outdoor-plus)
+	ocedo,ursus)
 		ucidef_set_interface_lan "eth0 eth1"
 		;;
 	avm,fritz4020|\
@@ -180,7 +178,8 @@ ath79_setup_interfaces()
 	ubnt,routerstation)
 		ucidef_set_interfaces_lan_wan "eth1" "eth0"
 		;;
-	comfast,cf-e560ac)
+	comfast,cf-e560ac|\
+	tplink,tl-wdr6500-v2)
 		ucidef_set_interface_wan "eth1"
 		ucidef_add_switch "switch0" \
 			"0@eth0" "1:lan" "2:lan" "3:lan" "4:lan"
@@ -201,12 +200,7 @@ ath79_setup_interfaces()
 			"0@eth0" "2:wan" "3:lan" "4:lan"
 		;;
 	dlink,dap-2695-a1)
-		ucidef_add_switch "switch0" \
-			"0@eth0" "2:lan" "3:wan" "6@eth1"
-		;;
-	dlink,dap-3662-a1)
-		ucidef_add_switch "switch0" \
-			"0@eth0" "1:lan:2" "2:lan:1" "6@eth1"
+		ucidef_add_switch "switch0" "0@eth0" "2:lan" "3:wan" "6@eth1"
 		;;
 	dlink,dch-g020-a1)
 		ucidef_add_switch "switch0" \
@@ -240,14 +234,13 @@ ath79_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0@eth0" "1:wan" "2:lan:3" "3:lan:2"
 		;;
-	engenius,eap300-v2)
+	engenius,ens202ext-v1)
+		ucidef_set_interface_wan "eth1"
 		ucidef_add_switch "switch0" \
 			"0@eth0" "1:lan"
 		;;
-	engenius,ens202ext-v1)
-		ucidef_set_interface_lan "eth1"
-		ucidef_add_switch "switch0" \
-			"0@eth0" "1:lan"
+	engenius,ews511ap)
+		ucidef_set_interface_lan "eth0 eth1" "dhcp"
 		;;
 	etactica,eg200)
 		ucidef_set_interface_lan "eth0" "dhcp"
@@ -264,19 +257,13 @@ ath79_setup_interfaces()
 	iodata,wn-ag300dgr|\
 	pcs,cr5000|\
 	sitecom,wlr-7100|\
-	wd,mynet-n750|\
-	xwrt,csac)
+	wd,mynet-n750)
 		ucidef_add_switch "switch0" \
 			"0@eth0" "1:lan" "2:lan" "3:lan" "4:lan" "5:wan"
 		;;
 	librerouter,librerouter-v1)
 		ucidef_add_switch "switch0" \
 			"0@eth0" "5:wan" "6@eth1" "4:lan"
-		;;
-	meraki,mr12)
-		ucidef_set_interface_lan "eth0"
-		ucidef_add_switch "switch0" \
-			"0@eth1" "1:lan"
 		;;
 	mercury,mw4530r-v1|\
 	tplink,archer-a7-v5|\
@@ -507,8 +494,7 @@ ath79_setup_macs()
 		lan_mac=$(mtd_get_mac_ascii bdcfg "lanmac")
 		label_mac=$lan_mac
 		;;
-	dlink,dap-2695-a1|\
-	dlink,dap-3662-a1)
+	dlink,dap-2695-a1)
 		label_mac=$(mtd_get_mac_ascii bdcfg "wlanmac")
 		;;
 	dlink,dir-825-b1)
@@ -651,11 +637,6 @@ ath79_setup_macs()
 		;;
 	wd,mynet-wifi-rangeextender)
 		lan_mac=$(nvram get et0macaddr)
-		;;
-	xwrt,csac)
-		wan_mac=$(mtd_get_mac_binary art 0)
-		lan_mac=$(macaddr_add "$wan_mac" 1)
-		label_mac=$wan_mac
 		;;
 	zyxel,nbg6616)
 		label_mac=$(mtd_get_mac_ascii u-boot-env ethaddr)
